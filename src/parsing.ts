@@ -1,9 +1,9 @@
 export const getReleaseNotes = (prBody: string) => {
   const currentPRBody = prBody;
 
-  const onelineMatch = /(?:(?:\r?\n)|^)notes: (.+?)(?:(?:\r?\n)|$)/gi.exec(currentPRBody);
+  const onelineMatch = /^notes: (.+?)$/gim.exec(currentPRBody);
   const multilineMatch =
-      /(?:(?:\r?\n)Notes:(?:\r?\n)((?:\*.+(?:(?:\r?\n)|$))+))/gi.exec(currentPRBody);
+      /(?:^notes:((?:\r?\n\*.+$)+))/gim.exec(currentPRBody);
 
   let notes: string | null = null;
   if (onelineMatch && onelineMatch[1]) {
