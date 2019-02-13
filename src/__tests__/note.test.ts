@@ -39,6 +39,38 @@ describe('comment generation', () => {
   });
 });
 
+describe('commit parsing', () => {
+  it('parses commit type from title', () => {
+    expect(noteUtils.parseCommitMessage('fix: foo', 'electron', 'electron')).toEqual({
+      originalSubject: "fix: foo",
+      subject: "foo",
+      type: "fix",
+    })
+    expect(noteUtils.parseCommitMessage('chore: foo', 'electron', 'electron')).toEqual({
+      originalSubject: "chore: foo",
+      subject: "foo",
+      type: "chore",
+    })
+  })
+  it('sets breaking change type from body', () => {
+    expect(noteUtils.parseCommitMessage('chore: foo\nBREAKING CHANGE\n', 'electron', 'electron')).toEqual({
+      originalSubject: "chore: foo",
+      subject: "foo",
+      body: "BREAKING CHANGE",
+      type: "breaking-change",
+    })
+  })
+  it('sets pr from commit title', () => {
+    expect(noteUtils.parseCommitMessage('fix: foo (#1234)', 'electron', 'electron')).toEqual({
+      originalSubject: "fix: foo (#1234)",
+      subject: "foo",
+      type: "fix",
+      originalPr: {number: 1234, owner: "electron", repo: "electron"},
+      pr: {number: 1234, owner: "electron", repo: "electron"},
+    })
+  })
+})
+
 /* Test PR Bodies */
 
 /* tslint:disable */
